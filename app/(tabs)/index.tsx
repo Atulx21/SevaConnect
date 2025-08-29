@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Card, Button, FAB, useTheme } from 'react-native-paper';
+import { Text, Card, Button, FAB, useTheme, IconButton } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useJobs } from '@/hooks/useJobs';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -11,6 +12,14 @@ export default function HomeScreen() {
   const { jobs } = useJobs();
   
   const recentJobs = jobs.slice(0, 3);
+
+  const navigateToNotifications = () => {
+    router.push('/notifications');
+  };
+
+  const navigateToSearch = () => {
+    router.push('/search');
+  };
 
   if (!user) {
     return (
@@ -41,7 +50,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.headerContainer}>
         <View style={styles.loggedInHeader}>
           <Text variant="headlineSmall" style={styles.greeting}>
             Namaste, {profile?.full_name || 'User'}!
@@ -50,7 +59,24 @@ export default function HomeScreen() {
             📍 {profile?.village}
           </Text>
         </View>
-
+        <View style={styles.headerIcons}>
+          <MaterialIcons
+            name="search"
+            size={28}
+            color={theme.colors.primary}
+            onPress={navigateToSearch}
+            style={styles.searchIcon}
+          />
+          <MaterialIcons
+            name="notifications"
+            size={28}
+            color={theme.colors.primary}
+            onPress={navigateToNotifications}
+            style={styles.notificationIcon}
+          />
+        </View>
+      </View>
+      <ScrollView style={styles.scrollView}>
         {profile?.role === 'provider' ? (
           <View style={styles.providerSection}>
             <Card style={styles.actionCard}>
@@ -217,5 +243,28 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: '#4caf50',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 10,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchIcon: {
+    padding: 8,
+    marginRight: 5,
+  },
+  notificationIcon: {
+    padding: 8,
+    marginRight: 5,
   },
 });
