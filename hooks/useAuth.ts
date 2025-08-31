@@ -28,22 +28,35 @@ export function useAuth() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session?.user?.id);
+      
       setUser(session?.user ?? null);
+      
       if (session?.user) {
         await fetchProfile(session.user.id);
       } else {
         setProfile(null);
       }
+      
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const getInitialSession = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error('Error getting initial session:', error);
+        return;
+      }
+
       setUser(session?.user ?? null);
+      
       if (session?.user) {
         await fetchProfile(session.user.id);
       }
@@ -63,13 +76,18 @@ export function useAuth() {
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error);
+        // Don't log error if profile doesn't exist (PGRST116)
+        if (error.code !== 'PGRST116') {
+          console.error('Error fetching profile:', error);
+        }
+        setProfile(null);
         return;
       }
 
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setProfile(null);
     }
   };
 
@@ -77,6 +95,7 @@ export function useAuth() {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      
       setUser(null);
       setProfile(null);
     } catch (error) {
@@ -86,17 +105,26 @@ export function useAuth() {
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
-    if (!user) throw new Error('No user logged in');
+    if (!user) {
+      throw new Error('No user logged in');
+    }
 
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', user.id)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating profile:', error);
+        throw error;
+      }
+      
       setProfile(data);
       return data;
     } catch (error) {
@@ -105,12 +133,19 @@ export function useAuth() {
     }
   };
 
+  const refreshProfile = async () => {
+    if (!user) return null;
+    
+    await fetchProfile(user.id);
+    return profile;
+  };
+
   return {
     user,
     profile,
     loading,
     signOut,
     updateProfile,
-    refreshProfile: () => user && fetchProfile(user.id),
+    refreshProfile,
   };
 }

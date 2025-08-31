@@ -32,11 +32,16 @@ export default function LoginScreen() {
     try {
       if (isSignUp) {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
         });
 
         if (error) throw error;
+
+        if (data.user && !data.session) {
+          Alert.alert('Success', 'Please check your email to verify your account before proceeding.');
+          return;
+        }
 
         if (data.user) {
           Alert.alert('Success', 'Account created! Please select your role.', [
@@ -45,11 +50,15 @@ export default function LoginScreen() {
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
+          email: email.trim(),
           password,
         });
 
         if (error) throw error;
+
+        if (!data.user) {
+          throw new Error('Login failed. Please try again.');
+        }
 
         // Check if user has a profile
         const { data: profile, error: profileError } = await supabase
@@ -58,14 +67,20 @@ export default function LoginScreen() {
           .eq('id', data.user.id)
           .single();
 
-        if (profileError || !profile) {
+        if (profileError && profileError.code !== 'PGRST116') {
+          console.error('Error fetching profile:', profileError);
+          throw new Error('Error checking profile. Please try again.');
+        }
+
+        if (!profile) {
           router.replace('/auth/role-selection');
         } else {
           router.replace('/(tabs)');
         }
       }
-    } catch (error) {
-      Alert.alert('Error', error.message);
+    } catch (error: any) {
+      console.error('Auth error:', error);
+      Alert.alert('Error', error.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -91,6 +106,7 @@ export default function LoginScreen() {
               style={styles.input}
               keyboardType="email-address"
               autoCapitalize="none"
+              autoComplete="email"
               left={<TextInput.Icon icon="email" />}
             />
 
@@ -101,6 +117,7 @@ export default function LoginScreen() {
               onChangeText={setPassword}
               style={styles.input}
               secureTextEntry
+              autoComplete={isSignUp ? "new-password" : "password"}
               left={<TextInput.Icon icon="lock" />}
             />
 
@@ -118,6 +135,7 @@ export default function LoginScreen() {
               mode="text" 
               onPress={() => setIsSignUp(!isSignUp)}
               style={styles.switchButton}
+              disabled={loading}
             >
               {isSignUp 
                 ? 'Already have an account? Sign In' 

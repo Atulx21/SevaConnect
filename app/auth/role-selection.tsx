@@ -4,22 +4,30 @@ import { Text, Button, Card } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 
+type Role = 'worker' | 'provider';
+
 export default function RoleSelectionScreen() {
   const { user } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<'worker' | 'provider' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
-  const handleRoleSelect = (role: 'worker' | 'provider') => {
+  const handleRoleSelect = (role: Role) => {
     setSelectedRole(role);
   };
 
   const handleContinue = () => {
-    if (selectedRole) {
+    if (selectedRole && user) {
       router.push({
         pathname: '/auth/profile-setup',
         params: { role: selectedRole }
       });
     }
   };
+
+  // If no user, redirect to login
+  if (!user) {
+    router.replace('/auth/login');
+    return null;
+  }
 
   return (
     <View style={styles.container}>
