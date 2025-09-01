@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, Card, Button, FAB, useTheme } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useJobs } from '@/hooks/useJobs';
@@ -109,7 +110,7 @@ export default function HomeScreen() {
       
       {profile?.role === 'provider' && (
         <FAB
-          icon="plus"
+          icon={props => <MaterialIcons name="add" {...props} />}
           style={styles.fab}
           onPress={() => router.push('/jobs/post')}
         />

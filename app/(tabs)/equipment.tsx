@@ -89,11 +89,13 @@ export default function EquipmentScreen() {
           horizontal 
           showsHorizontalScrollIndicator={false}
           style={styles.typesContainer}
+          contentContainerStyle={styles.typesContentContainer}
         >
           <Chip
             selected={selectedType === ''}
             onPress={() => setSelectedType('')}
             style={styles.typeChip}
+            selectedColor="#2e7d32"
           >
             All
           </Chip>
@@ -103,6 +105,7 @@ export default function EquipmentScreen() {
               selected={selectedType === type}
               onPress={() => setSelectedType(type)}
               style={styles.typeChip}
+              selectedColor="#2e7d32"
             >
               {type}
             </Chip>
@@ -112,18 +115,19 @@ export default function EquipmentScreen() {
 
       <ScrollView 
         style={styles.equipmentList}
+        contentContainerStyle={styles.equipmentListContent}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={onRefresh} />
         }
       >
         {filteredEquipment.map((item) => (
-          <Card key={item.id} style={styles.equipmentCard}>
+          <Card key={item.id} style={styles.equipmentCard} mode="elevated">
             <Card.Content>
               <View style={styles.equipmentHeader}>
                 <Text variant="titleMedium" style={styles.equipmentName}>
                   {item.name}
                 </Text>
-                <Chip mode="outlined" compact>
+                <Chip mode="outlined" compact selectedColor="#2e7d32">
                   {item.equipment_type}
                 </Chip>
               </View>
@@ -149,13 +153,17 @@ export default function EquipmentScreen() {
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button onPress={() => router.push(`/equipment/${item.id}`)}>
-                View Details
+              <Button 
+                onPress={() => router.push(`/equipment/${item.id}`)}
+                icon={props => <MaterialIcons name="info" {...props} />}
+              >
+                Details
               </Button>
               <Button 
                 mode="contained" 
                 onPress={() => router.push(`/equipment/${item.id}/book`)}
                 style={styles.bookButton}
+                icon={props => <MaterialIcons name="date-range" {...props} />}
               >
                 Book Now
               </Button>
@@ -173,7 +181,7 @@ export default function EquipmentScreen() {
       </ScrollView>
       
       <FAB
-        icon="plus"
+        icon={props => <MaterialIcons name="add" {...props} />}
         style={styles.fab}
         onPress={() => router.push('/equipment/add')}
       />
@@ -181,8 +189,8 @@ export default function EquipmentScreen() {
       <Button 
         mode="outlined" 
         onPress={() => router.push('/equipment/my-equipment')}
-        style={styles.myEquipmentButton}
-        icon="build"
+        style={styles.actionButton}
+        icon={props => <MaterialIcons name="build" {...props} />}
       >
         My Equipment
       </Button>
@@ -201,6 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    elevation: 2,
   },
   title: {
     color: '#2e7d32',
@@ -210,20 +219,28 @@ const styles = StyleSheet.create({
   searchBar: {
     marginBottom: 15,
     elevation: 2,
+    backgroundColor: '#fff',
   },
   typesContainer: {
     marginBottom: 10,
+  },
+  typesContentContainer: {
+    paddingRight: 10,
   },
   typeChip: {
     marginRight: 10,
   },
   equipmentList: {
     flex: 1,
+  },
+  equipmentListContent: {
     padding: 15,
+    paddingBottom: 80, // Add extra padding at bottom for FAB
   },
   equipmentCard: {
     marginBottom: 15,
-    elevation: 2,
+    elevation: 3,
+    borderRadius: 8,
   },
   equipmentHeader: {
     flexDirection: 'row',
@@ -273,10 +290,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: '#4caf50',
   },
-  myEquipmentButton: {
+  actionButton: {
     position: 'absolute',
     margin: 16,
     left: 0,
     bottom: 0,
+    backgroundColor: 'white',
+    borderColor: '#4caf50',
   },
 });

@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { validatePayAmount, validateWorkersNeeded, sanitizeInput } from '@/utils/validation';
+import { JOB_CATEGORIES } from '@/utils/constants';
 
 export default function PostJobScreen() {
   const { user } = useAuth();

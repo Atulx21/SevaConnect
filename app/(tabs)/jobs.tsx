@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Text, Card, Button, Chip, Searchbar, FAB } from 'react-native-paper';
 import { router } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useJobs } from '@/hooks/useJobs';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
+import { JOB_CATEGORIES } from '@/utils/constants';
 
 export default function JobsScreen() {
   const { profile } = useAuth();
@@ -151,7 +153,7 @@ export default function JobsScreen() {
       
       {profile?.role === 'provider' && (
         <FAB
-          icon="plus"
+          icon={props => <MaterialIcons name="add" {...props} />}
           style={styles.fab}
           onPress={() => router.push('/jobs/post')}
         />

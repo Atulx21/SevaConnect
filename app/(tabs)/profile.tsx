@@ -200,7 +200,7 @@ export default function ProfileScreen() {
               mode="outlined" 
               onPress={() => router.push('/profile/ratings')}
               style={styles.actionButton}
-              icon="star"
+              icon={props => <MaterialIcons name="star" {...props} />}
             >
               View All Ratings
             </Button>
@@ -210,7 +210,7 @@ export default function ProfileScreen() {
                 mode="outlined" 
                 onPress={() => router.push('/skills/manage')}
                 style={styles.actionButton}
-                icon="build"
+                icon={props => <MaterialIcons name="build" {...props} />}
               >
                 Manage My Skills
               </Button>
@@ -221,7 +221,7 @@ export default function ProfileScreen() {
                 mode="outlined" 
                 onPress={() => router.push('/skills/browse')}
                 style={styles.actionButton}
-                icon="search"
+                icon={props => <MaterialIcons name="search" {...props} />}
               >
                 Browse Skilled Workers
               </Button>
@@ -232,7 +232,7 @@ export default function ProfileScreen() {
                 mode="outlined" 
                 onPress={() => router.push('/jobs/my-jobs')}
                 style={styles.actionButton}
-                icon="work"
+                icon={props => <MaterialIcons name="work" {...props} />}
               >
                 My Posted Jobs
               </Button>
@@ -243,7 +243,7 @@ export default function ProfileScreen() {
                 mode="outlined" 
                 onPress={() => router.push('/stats')}
                 style={styles.actionButton}
-                icon="bar-chart"
+                icon={props => <MaterialIcons name="bar-chart" {...props} />}
               >
                 Platform Statistics
               </Button>
@@ -253,7 +253,7 @@ export default function ProfileScreen() {
               mode="outlined" 
               onPress={() => router.push('/equipment/my-equipment')}
               style={styles.actionButton}
-              icon="build"
+              icon={props => <MaterialIcons name="build" {...props} />}
             >
               My Equipment
             </Button>
@@ -261,8 +261,8 @@ export default function ProfileScreen() {
             <Button 
               mode="outlined" 
               onPress={handleSignOut}
-              style={[styles.actionButton, styles.signOutButton]}
-              icon="logout"
+              style={[styles.actionButton, styles.logoutButton]}
+              icon={props => <MaterialIcons name="logout" {...props} />}
             >
               Sign Out
             </Button>
