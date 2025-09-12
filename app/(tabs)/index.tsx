@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Card, Button, FAB, useTheme } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, Card, Button, FAB, useTheme, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
@@ -42,6 +42,26 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text variant="headlineSmall" style={styles.title}>
+          Gramin KaamConnect
+        </Text>
+        <View style={styles.headerIcons}>
+          <IconButton
+            icon={props => <MaterialIcons name="search" {...props} />}
+            size={24}
+            onPress={() => router.push('/search')}
+            style={styles.headerIcon}
+          />
+          <IconButton
+            icon={props => <MaterialIcons name="notifications" {...props} />}
+            size={24}
+            onPress={() => router.push('/notifications')}
+            style={styles.headerIcon}
+          />
+        </View>
+      </View>
+      
       <ScrollView style={styles.scrollView}>
         <View style={styles.loggedInHeader}>
           <Text variant="headlineSmall" style={styles.greeting}>
@@ -125,6 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: 60,
     paddingHorizontal: 20,
     paddingBottom: 20,
@@ -132,10 +155,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerIcon: {
+    marginLeft: 8,
+  },
   title: {
     color: '#2e7d32',
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   content: {
     flex: 1,
