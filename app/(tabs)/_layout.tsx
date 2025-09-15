@@ -37,7 +37,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="applications"
         options={{
-          title: 'My Applications',
+          title: 'Applications',
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="assignment" size={size} color={color} />
           ),
@@ -46,7 +46,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="equipment"
         options={{
-          title: 'Rent Equipment',
+          title: 'Equipment',
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="build" size={size} color={color} />
           ),
@@ -58,24 +58,6 @@ export default function TabLayout() {
           title: 'Profile',
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons name="person" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          title: 'Notifications',
-          tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="notifications" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="search" size={size} color={color} />
           ),
         }}
       />
